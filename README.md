@@ -47,7 +47,8 @@ The Task Manager App is a simple yet efficient application for managing your dai
    npm run dev (to start client)
    npm start (to start server)
    ```
-  
+### APIs
+   [Apis](https://task-management-app-swart.vercel.app/)
 ### Acknowledgements
     React
     Redux
