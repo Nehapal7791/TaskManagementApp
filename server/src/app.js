@@ -5,16 +5,16 @@ import { specs, swaggerUi } from "./config/swagger.js";
 import cors from "cors";
 const app = express();
 const corsOptions = {
-  origin: "http://localhost:5173", // Allow your frontend URL
+  origin: "https://task-management-app-np.netlify.app",
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type"],
-  credentials: true, // Allow cookies and other credentials
+  credentials: true,
 };
 
-app.use(cors(corsOptions)); // Apply CORS middleware
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use("/api", router);
-// app.use(cors());
+
 app.options("*", cors(corsOptions));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 

@@ -40,4 +40,4 @@ export const sortTasks = (tasks) => {
     return aDate - bDate;
   });
 };
-export const API_URL = "http://localhost:3000/api/";
+export const API_URL = "https://task-management-app-swart.vercel.app/api/";
