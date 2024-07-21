@@ -34,8 +34,8 @@ The Task Manager App is a simple yet efficient application for managing your dai
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/task-manager-app.git
-   cd task-manager-app
+   git clone https://github.com/Nehapal7791/TaskManagementApp.git
+   cd client 
    ```
 2. Install the dependencies:
   ```bash
