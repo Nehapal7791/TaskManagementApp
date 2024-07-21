@@ -35,16 +35,18 @@ The Task Manager App is a simple yet efficient application for managing your dai
 
    ```bash
    git clone https://github.com/Nehapal7791/TaskManagementApp.git
-   cd client 
+   cd client (for frontend)
+   cd server (for backend)
    ```
 2. Install the dependencies:
   ```bash
-    npm install
+  npm install
   ```
-4. To run
-    ```bash
-    npm run dev
-    ```
+3. To run
+   ```bash
+   npm run dev (to start client)
+   npm start (to start server)
+   ```
   
 ### Acknowledgements
     React
