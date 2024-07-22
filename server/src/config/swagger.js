@@ -14,6 +14,10 @@ const options = {
         url: "http://localhost:3000/api",
         description: "Local server",
       },
+      {
+        url: "https://task-management-app-swart.vercel.app/",
+        description: "Deployed server",
+      },
     ],
   },
   apis: ["./src/routers/*.js"],
