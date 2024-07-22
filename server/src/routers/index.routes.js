@@ -17,7 +17,7 @@ const router = Router();
 
 /**
  * @swagger
- * /tasks/all-tasks:
+ * /all-tasks:
  *   get:
  *     summary: Retrieve all tasks
  *     tags: [Tasks]
@@ -50,63 +50,49 @@ const router = Router();
  */
 router.get("/all-tasks", getTasks);
 
-// /**
-//  * @swagger
-//  * /create-tasks:
-//  *   post:
-//  *     summary: Create a new task
-//  *     tags: [Tasks]
-//  *     requestBody:
-//  *       required: true
-//  *       content:
-//  *         application/json:
-//  *           schema:
-//  *             $ref: '#/models/task-data.schema'
-//  *     responses:
-//  *       201:
-//  *         description: The task was successfully created
-//  *         content:
-//  *           application/json:
-//  *             schema:
-//  *               $ref: '#/models/task-data.schema'
-//  *       400:
-//  *         description: Bad request
-//  */
-/** POST Methods */
+/**
+ * @openapi
+ * '/create-tasks':
+ *  post:
+ *     tags: [Tasks]
+ *     summary: Create a Task
+ *     requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - title
+ *               - description
+ *               - priorityStatus
+ *               - dueDate
+ *             properties:
+ *               title:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               priorityStatus:
+ *                 type: string
+ *               dueDate:
+ *                 type: string
+ *                 format: date-time
+ *     responses:
+ *      201:
+ *        description: Created
+ *      409:
+ *        description: Conflict
+ *      404:
+ *        description: Not Found
+ *      500:
+ *        description: Server Error
+ */
 
-// /**
-//  * @openapi
-//  * '/api/create-task':
-//  *  post:
-//  *     tags:
-//  *     - Task Controller
-//  *     summary: Create a Task
-//  *     requestBody:
-//  *      required: true
-//  *      content:
-//  *        application/json:
-//  *           schema:
-//  *            type: object
-//  *            required:
-//  *              - title
-//  *              - description
-//  *              - priorityStatus
-//  *              - dueDate
-//  *     responses:
-//  *      201:
-//  *        description: Created
-//  *      409:
-//  *        description: Conflict
-//  *      404:
-//  *        description: Not Found
-//  *      500:
-//  *        description: Server Error
-//  */
 router.post("/create-tasks", createTask);
 
 /**
  * @swagger
- * /tasks/{id}:
+ * /get-tasks-by-id/{id}:
  *   get:
  *     summary: Get a task by ID
  *     tags: [Tasks]
@@ -116,24 +102,37 @@ router.post("/create-tasks", createTask);
  *         schema:
  *           type: string
  *         required: true
- *         description: The task id
+ *         description: The task ID
  *     responses:
  *       200:
- *         description: The task description by id
+ *         description: The task description by ID
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Task'
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 title:
+ *                   type: string
+ *                 description:
+ *                   type: string
+ *                 priorityStatus:
+ *                   type: string
+ *                 dueDate:
+ *                   type: string
+ *                   format: date-time
  *       404:
  *         description: The task was not found
  *       500:
  *         description: Some server error
  */
+
 router.get("/get-tasks-by-id/:id", getTaskById);
 
 /**
  * @swagger
- * /tasks/{id}:
+ * /update-tasks/{id}:
  *   put:
  *     summary: Update a task by the id
  *     tags: [Tasks]
@@ -149,19 +148,30 @@ router.get("/get-tasks-by-id/:id", getTaskById);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Task'
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               priorityStatus:
+ *                 type: string
+ *               dueDate:
+ *                 type: string
+ *                 format: date-time
  *     responses:
  *       200:
  *         description: The task was updated
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Task'
+ *               type: object
  *       400:
  *         description: Bad request
  *       404:
  *         description: The task was not found
  */
+
 router.put("/update-tasks/:id", updateTask);
 
 /**

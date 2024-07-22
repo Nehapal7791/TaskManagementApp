@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { FaCheck, FaPencilAlt, FaPlus, FaTrash } from "react-icons/fa";
 import { ToastContainer } from "react-toastify";
-import { notify, sortTasks } from "./utils";
-
+import { notify } from "./utils";
 import { useDispatch, useSelector } from "react-redux";
 import { addTask, deleteTask, fetchAllTasks } from "./redux/taskSlice";
 import { createTask, deleteTaskById, updateTask } from "./api";
@@ -13,8 +12,10 @@ const TaskManager = () => {
   const [dueDate, setDueDate] = useState("");
   const [priorityStatus, setPriorityStatus] = useState("");
   const [editingTaskId, setEditingTaskId] = useState(null);
+  const [sortMethod, setSortMethod] = useState("priority"); // State for sorting method
   const dispatch = useDispatch();
   const tasks = useSelector((state) => state.tasks.tasks); // Access tasks from Redux state
+  const status = useSelector((state) => state.tasks.status); // Access status from Redux state
 
   const handleAddTask = async () => {
     const newTask = {
@@ -55,8 +56,11 @@ const TaskManager = () => {
 
   const handleDeleteTask = async (id) => {
     try {
+      // Perform the API call directly
       const result = await deleteTaskById(id);
+
       if (result.success) {
+        // Dispatch action to remove task from Redux state
         dispatch(deleteTask(id));
         notify("Task deleted successfully", "success");
       } else {
@@ -74,9 +78,13 @@ const TaskManager = () => {
     };
 
     try {
+      // Perform the API call directly
       const result = await updateTask(task._id, updatedTask);
+
       if (result.success) {
+        // Dispatch action to update the task in Redux state
         dispatch(fetchAllTasks());
+        // Notify success
         notify("Task status updated", "success");
       } else {
         notify(result.message || "Failed to update task status", "error");
@@ -118,15 +126,38 @@ const TaskManager = () => {
     dispatch(fetchAllTasks());
   }, [dispatch]);
 
+  const handleSortChange = (method) => {
+    setSortMethod(method);
+  };
+
+  const sortTasks = (tasks) => {
+    if (sortMethod === "priority") {
+      const priorityOrder = { High: 1, Medium: 2, Low: 3 };
+      return tasks.slice().sort((a, b) => {
+        const priorityComparison =
+          priorityOrder[a.priorityStatus] - priorityOrder[b.priorityStatus];
+        if (priorityComparison !== 0) return priorityComparison;
+        return new Date(a.dueDate) - new Date(b.dueDate);
+      });
+    } else if (sortMethod === "date") {
+      const today = new Date().setHours(0, 0, 0, 0);
+      return tasks.slice().sort((a, b) => {
+        const dateA = new Date(a.dueDate).setHours(0, 0, 0, 0);
+        const dateB = new Date(b.dueDate).setHours(0, 0, 0, 0);
+        if (dateA === today) return -1;
+        if (dateB === today) return 1;
+        return dateA - dateB;
+      });
+    }
+    return tasks;
+  };
+
   return (
     <div className="flex flex-col items-center w-full sm:w-3/4 md:w-1/2 mx-auto  p-3">
-      <h1 className="text-black-600 text-2xl font-bold mb-4">
-        TASK MANAGEMENT APP
-      </h1>
-
-      {/* Inputs*/}
+      <h1 className=" text-2xl font-bold mb-4">Task Manager App</h1>
+      {/* Input and search box */}
       <div className="flex flex-col items-center mb-4 w-full">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+        <div className="grid grid-cols-2 gap-4 mr-2">
           <input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
@@ -155,19 +186,43 @@ const TaskManager = () => {
             onChange={handleDueDateChange}
             value={dueDate}
             type="date"
-            className="form-input border border-gray-300 rounded-md py-2 px-4"
+            className="form-input border border-gray-300 rounded-md py-2 px-4 w-full"
           />
-          <div className="md:col-span-2">
+          <div className="col-span-2">
             <button
               className="bg-purple-700 text-white rounded-md py-2 px-4 w-full flex text-center items-center justify-center"
               onClick={handleAddTask}
             >
-              <FaPlus className="mr-2" /> Add Task
+              <FaPlus /> Add Task
             </button>
           </div>
         </div>
       </div>
-
+      <div className="flex justify-between items-center w-full mb-4">
+        <div>Total tasks: {tasks.length}</div>
+        <div className="flex gap-2">
+          <button
+            className={`mr-2 ${
+              sortMethod === "priority"
+                ? "bg-purple-700 text-white"
+                : "bg-gray-200 text-gray-700"
+            } rounded-md px-4 py-2`}
+            onClick={() => handleSortChange("priority")}
+          >
+            Sort by Priority
+          </button>
+          <button
+            className={`${
+              sortMethod === "date"
+                ? "bg-purple-700 text-white"
+                : "bg-gray-200 text-gray-700"
+            } rounded-md px-4 py-2`}
+            onClick={() => handleSortChange("date")}
+          >
+            Sort by Date
+          </button>
+        </div>
+      </div>
       {/* List of items */}
       <div className="flex flex-col w-full">
         {tasks.length > 0 ? (
@@ -223,7 +278,6 @@ const TaskManager = () => {
           <div className="text-center text-gray-700">No tasks available</div>
         )}
       </div>
-
       {/* Toastify */}
       <ToastContainer
         position="top-right"

@@ -8,14 +8,15 @@ const options = {
       version: "1.0.0",
       description: "API documentation for Task Management",
     },
+    basePath: "/api",
     servers: [
       {
-        url: "http://localhost:3000",
+        url: "http://localhost:3000/api",
         description: "Local server",
       },
     ],
   },
-  apis: ["../routers/index.routes.js"],
+  apis: ["./src/routers/*.js"],
 };
 
 const specs = swaggerJsdoc(options);
