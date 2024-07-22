@@ -15,7 +15,7 @@ const options = {
         description: "Local server",
       },
       {
-        url: "https://task-management-app-swart.vercel.app/",
+        url: "https://task-management-app-swart.vercel.app",
         description: "Deployed server",
       },
     ],
